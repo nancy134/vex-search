@@ -58,3 +58,7 @@ gem 'faraday_middleware'
 gem 'faraday-detailed_logger'
 
 gem 'sidekiq'
+
+gem 'capistrano'
+gem 'capistrano-rails'
+gem 'capistrano-bundler'
