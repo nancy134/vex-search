@@ -1,0 +1,27 @@
+<%= form_with(model: application, local: true) do |f| %>
+  <% if application.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(application.errors.count, "error") %> prohibited this application from being saved:</h2>
+
+      <ul>
+      <% application.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :token %>
+    <%= f.text_field :token %>
+  </div>
+
+  <div class="field">
+    <%= f.label :environment %>
+    <%= f.select(:environment, Application.environments.keys.map {|environment| [environment.titleize, environment]}) %>
+  </div>
+
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>
