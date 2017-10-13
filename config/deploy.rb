@@ -8,7 +8,7 @@ set :repo_url, "git@github.com:nancy134/vex-search.git"
 # ask :branch, `git rev-parse --abbrev-ref HEAD`.chomp
 
 # Default deploy_to directory is /var/www/my_app_name
-set :deploy_to, "/home/unbuntu/deploy/vex-search"
+set :deploy_to, "/home/ubuntu/deploy/vex-search"
 
 # Default value for :format is :airbrussh.
 # set :format, :airbrussh
