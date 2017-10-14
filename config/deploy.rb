@@ -38,3 +38,16 @@ set :branch, 'master' #or whichever branch you want to use
 set :linked_dirs, fetch(:linked_dirs, []).push('log', 'tmp/pids', 'tmp/cache', 'tmp/sockets', 'vendor/bundle', 'public/system')
 set :linked_files, %w(config/application.yml)
 # set :keep_releases, 5
+
+namespace :deploy do
+  desc 'Restart application'
+  task :restart do
+    on roles(:web), in: :sequence, wait: 5 do
+      execute :mkdir, '-p', "#{release_path}/tmp"
+      execute :touch, release_path.join('tmp/restart.txt')
+    end
+  end
+
+  after :deploy, "deploy:restart"
+  after :rollback, "deploy:restart"
+end
