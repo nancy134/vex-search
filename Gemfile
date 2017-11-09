@@ -64,3 +64,5 @@ gem 'sidekiq'
 gem 'capistrano'
 gem 'capistrano-rails'
 gem 'capistrano-bundler'
+
+gem 'active_model_serializers'
