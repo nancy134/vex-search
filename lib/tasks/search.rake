@@ -1,6 +1,5 @@
 namespace :search do
   task :get_search, [:staging, :authorization, :device_token] => [:environment] do |t, args|
-    puts "hello"
     page = 1
     @array = []
     @url = ""
@@ -18,9 +17,6 @@ namespace :search do
     @header_authorization = "Token token=#{args[:authorization]}" 
     @header_device_token = args[:device_token]
 
-    puts "url: #{@url}"
-    puts "header_authorization: #{@header_authorization}"
-    puts "header_device_token: #{@header_device_token}"
     @application = Application.find_or_create_by(token: @header_authorization, environment: @environment)
 
     @stores = Store.where(application_id: @application.id).destroy_all
@@ -39,7 +35,6 @@ namespace :search do
   end
 
   def preorder_subtree(body)
-    Rails.logger.debug "preorder_subtree"
     repo_info = JSON.parse(body)
 
     if (repo_info['pages'] == 0)
@@ -50,18 +45,32 @@ namespace :search do
 
       name = item['name']
 
-      name_array1 = name.split('<br>')
-      if (name_array1.length > 0)
-        name = name_array1[0]
-        name_array2 = name_array1[0].split('**')
-        if (name_array2.length > 2)
-          name = name_array2[2]
-        end
+      puts "name: #{name}"
+      name_array = name.split('**')
+      
+      if (name_array.length > 2)
+        name = name_array[2]
       end
+
+      name_array = name.split('<br>')
+      start_br = name.index('<br>')
+      
+      if (start_br == 0)
+        name = name_array[1]
+      else
+        name = name_array[0]
+      end
+
 
       if (!item['logo'].include? "medium.png")
         @array << {:name => ActionController::Base.helpers.strip_tags(name), :id => item['id'], :display => name}
-        Store.create(store_id: item['id'], name: ActionController::Base.helpers.strip_tags(name), display: name, application_id: @application.id)
+        puts "Store #{item['id']}"
+        about = item['about'].split("~~")
+        display = name
+        if (about.length > 1)
+          display = "#{name} #{about[1]}"
+        end
+        Store.create(store_id: item['id'], name: ActionController::Base.helpers.strip_tags(display), display: name, application_id: @application.id, about: item['about'])
       end
 
 
